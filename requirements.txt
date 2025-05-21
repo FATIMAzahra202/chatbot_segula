@@ -4,3 +4,4 @@ pandas
 openpyxl
 PyMuPDF
 python-dotenv
+google-generativeai
