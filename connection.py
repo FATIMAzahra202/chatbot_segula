@@ -1,9 +1,4 @@
-import mysql.connector
+import sqlite3
 
 def connect_db():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="0000",  # ← remplace par ton mot de passe MySQL
-        database="segula_chatbot"
-    )
+    return sqlite3.connect("segula_chatbot.db")
