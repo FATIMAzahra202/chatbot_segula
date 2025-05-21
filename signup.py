@@ -6,7 +6,7 @@ from connection import connect_db
 def signup():
     st.title("📝 Création de compte")
 
-    email = st.text_input("Email")
+    email = st.text_input("Email").strip().lower()
     password = st.text_input("Mot de passe", type="password")
     confirm_password = st.text_input("Confirmer le mot de passe", type="password")
     role = st.selectbox("Rôle", ["user", "admin"])
@@ -21,9 +21,10 @@ def signup():
             cursor = conn.cursor()
 
             # Vérifie si l'email existe déjà
-            cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
-            if cursor.fetchone():
-                st.error("❌ Un compte avec cet email existe déjà.")
+             cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+             if cursor.fetchone():
+                 st.error("❌ Un compte avec cet email existe déjà.")
+
             else:
                 hashed_pw = hash_password(password)
                 cursor.execute(
