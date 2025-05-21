@@ -1,3 +1,4 @@
+cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
 -- Création de la base de données
 CREATE DATABASE IF NOT EXISTS segula_chatbot;
 USE segula_chatbot;
