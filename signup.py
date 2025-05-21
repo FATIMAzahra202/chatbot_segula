@@ -17,25 +17,30 @@ def signup():
         elif password != confirm_password:
             st.error("❌ Les mots de passe ne correspondent pas.")
         else:
-            conn = connect_db()
-            cursor = conn.cursor()
+            try:
+                conn = connect_db()
+                cursor = conn.cursor()
 
-            # Vérifie si l'email existe déjà
-             cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
-             if cursor.fetchone():
-                 st.error("❌ Un compte avec cet email existe déjà.")
+                # Vérifie si l'email existe déjà
+                cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+                if cursor.fetchone():
+                    st.error("❌ Un compte avec cet email existe déjà.")
+                else:
+                    hashed_pw = hash_password(password)
+                    cursor.execute(
+                        "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
+                        (email, hashed_pw, role)
+                    )
+                    conn.commit()
+                    st.success("✅ Compte créé avec succès. Vous pouvez maintenant vous connecter.")
 
-            else:
-                hashed_pw = hash_password(password)
-                cursor.execute(
-                    "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
-                    (email, hashed_pw, role)
-                )
-                conn.commit()
-                st.success("✅ Compte créé avec succès. Vous pouvez maintenant vous connecter.")
-            
-            cursor.close()
-            conn.close()
+                cursor.close()
+                conn.close()
+
+            except sqlite3.IntegrityError:
+                st.error("❌ Erreur : cet email est déjà utilisé.")
+            except Exception as e:
+                st.error(f"❌ Erreur inattendue : {e}")
 
     if st.button("Retour à la connexion"):
         st.session_state.page = "login"
