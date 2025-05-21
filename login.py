@@ -1,6 +1,7 @@
 import streamlit as st
 from connection import connect_db
-from utils.security import hash_password, check_password  # ← vérifie bien que ce chemin est correct
+from security import hash_password, check_password
+
 
 conn = connect_db()
 
