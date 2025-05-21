@@ -1,9 +1,7 @@
 import streamlit as st
-from connection import connect_db
+import sqlite3
 from security import hash_password, check_password
-
-
-conn = connect_db()
+from connection import connect_db
 
 def login():
     st.title("🔐 Connexion")
@@ -16,10 +14,11 @@ def login():
             st.warning("⚠️ Veuillez remplir tous les champs.")
         else:
             conn = connect_db()
-            cursor = conn.cursor(dictionary=True)
+            conn.row_factory = sqlite3.Row  # ✅ pour que chaque ligne soit un dict
+            cursor = conn.cursor()
 
             # Vérifie si l'utilisateur existe
-            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
             user = cursor.fetchone()
 
             if user and check_password(password, user["password"]):
