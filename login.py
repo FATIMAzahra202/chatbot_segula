@@ -1,7 +1,7 @@
 import streamlit as st
-from db.connection import connect_db
+from connection import connect_db
 from utils.security import hash_password, check_password
-from db.connection import connect_db
+
 
 conn = connect_db()
 
